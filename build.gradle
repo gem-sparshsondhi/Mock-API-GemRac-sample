@@ -1,0 +1,78 @@
+defaultTasks 'clean', 'build', 'test', 'aggregate', 'reports'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'net.serenity-bdd.aggregator'
+
+group 'org.gemrac-crud-sample'                       //set according to your group name
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    project.ext {
+        serenityVersion = '2.3.12'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath('net.serenity-bdd:serenity-gradle-plugin:' + serenityVersion)
+        classpath('net.serenity-bdd:serenity-single-page-report:' + serenityVersion)
+    }
+}
+ext {
+    serenityCoreVersion = '3.6.12'
+    jsonVersion = '20230227'
+    slf4jVersion = '2.0.5'
+}
+
+dependencies {
+    testImplementation "net.serenity-bdd:serenity-core:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-junit:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-rest-assured:${serenityCoreVersion}",
+            "net.serenity-bdd:serenity-cucumber:${serenityCoreVersion}",
+            "org.json:json:${jsonVersion}",
+            "org.slf4j:slf4j-simple:${slf4jVersion}",
+            'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.2',
+            'io.rest-assured:json-schema-validator:5.3.0',
+            'com.jayway.jsonpath:json-path:2.7.0'
+
+    implementation 'log4j:log4j:1.2.17'
+
+//    GemJar Dependencies
+    implementation group: 'com.gemecosystem.gemjar', name: 'gemjar-core', version: '1.2.9.1'
+}
+
+serenity {
+    reports = ["single-page-html"]
+}
+test {
+    ext.setSystemPropertyIfExists = { key ->
+        if (null != System.getProperty(key)) {
+            systemProperty key, System.getProperty(key)
+        }
+    }
+
+    systemProperty 'environment', System.getProperty('environment') ? System.getProperty('environment') : 'integ'
+
+    String[] serenityPropertyArray = [
+            'tags',
+            'cucumber.filter.tags'
+    ]
+
+    for(int i=0;i<serenityPropertyArray.length;i++){
+        setSystemPropertyIfExists(serenityPropertyArray[i])
+    }
+
+//    filter {
+//        includeTestsMatching "*.CucumberRunner"                   //Set to your Cucumber Runner directory/Package
+//    }
+    testLogging.showStandardStreams = true
+    systemProperties System.getProperties()
+}
+
+
+gradle.startParameter.continueOnFailure = true

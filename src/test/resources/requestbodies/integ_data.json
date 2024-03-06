@@ -1,0 +1,44 @@
+{
+  "Create_John_Cena": {
+    "username": "John Cena",
+    "email": "John.Cena@example.com",
+    "password": "Y0uC4nt533M3",
+    "first_name": "John",
+    "last_name": "Cena",
+    "age": 50,
+    "address": {
+      "street": "Wrestling Plains",
+      "suite": "Suite 999",
+      "city": "New York",
+      "zipcode": "90566-6661",
+      "geo": {
+        "lat": "42",
+        "lng": "-64.4222"
+      }
+    }
+  },
+  "Put_John_Cena": {
+    "username": "Not John Cena",
+    "email": "John.Cena@example.com",
+    "password": "Y0uC4nt533M3",
+    "first_name": "John",
+    "last_name": "Cena",
+    "age": 50,
+    "address": {
+      "street": "Wrestling Plains",
+      "suite": "Suite 999",
+      "city": "New Jersey",
+      "zipcode": "90566-6661",
+      "geo": {
+        "lat": "42",
+        "lng": "-64.4222"
+      }
+    }
+  },
+  "Patch_John_Cena": {
+    "password": "Morpheus",
+    "address": {
+      "suite": "Suite 001"
+    }
+  }
+}
