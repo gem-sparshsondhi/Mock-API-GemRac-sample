@@ -31,13 +31,15 @@ public class UtilStepDefinition extends GenericFunctions {
 
     @And("^user sends a \"(.*?)\" request$")
     public void makesRequest(String method) {
-        addHeaders("token", getAuthToken());
+        if (!latestRequestKey.equals("Generate Token"))
+            addHeaders("token", authToken);
         sendRequest(method);
     }
 
     @And("^user sends \"(.*?)\" request as a \"(.*?)\" request$")
     public void makesRequest(String requestKey, String method) {
-        reqSpecMap.get(requestKey).header("token", "Sparsh_t");
+        if (!requestKey.equals("Generate Token"))
+            addHeaders(requestKey,"token", authToken);
         sendRequest(method, requestKey);
     }
 
@@ -434,12 +436,8 @@ public class UtilStepDefinition extends GenericFunctions {
         clearRequest("GetUserDetails");
     }
 
-    @Given("^User logs in with valid credentials$")
+    @Then("^User saves the login token$")
     public void userLogsInWithValidCredentials() {
-        authToken = "Sparsh_t";
-    }
-
-    public static String getAuthToken() {
-        return authToken;
+        authToken = responseMap.get(latestResponseKey).getBody().jsonPath().getString("Token");
     }
 }

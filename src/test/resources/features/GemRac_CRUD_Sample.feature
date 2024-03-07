@@ -2,7 +2,11 @@
 Feature: Sample RestAssured Mocking service tests
 
   Background: Logging in
-    Given User logs in with valid credentials
+    Given user creates a new request named "Generate Token" request and sets "tokenGeneration" as endpoint
+    And user adds header named "token_valid" with value "true" to the request
+    And user adds Query Parameter named "username" with value "Sparsh" to the request
+    When user sends a "get" request
+    Then User saves the login token
 
   @Create
   Scenario: Create a new User with pre-saved data
