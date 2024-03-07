@@ -6,6 +6,7 @@ Feature: Sample RestAssured Mocking service tests
     And user adds header named "token_valid" with value "true" to the request
     And user adds Query Parameter named "username" with value "Sparsh" to the request
     When user sends a "get" request
+    Then user verifies "200" status code
     Then User saves the login token
 
   @Create
