@@ -39,7 +39,7 @@ public class UtilStepDefinition extends GenericFunctions {
     @And("^user sends \"(.*?)\" request as a \"(.*?)\" request$")
     public void makesRequest(String requestKey, String method) {
         if (!requestKey.equals("Generate Token"))
-            addHeaders(requestKey,"token", authToken);
+            addHeaders(requestKey, "token", authToken);
         sendRequest(method, requestKey);
     }
 
@@ -272,6 +272,16 @@ public class UtilStepDefinition extends GenericFunctions {
     @And("^user verifies value \"(.*?)\" is found in Json array response for \"(.*?)\" key for \"(.*?)\" response$")
     public void verifyValueInJsonArrayInResponse(String expectedValue, String keyName, String responseKey) {
         verifyValueInJsonArray(keyName, expectedValue, responseKey);
+    }
+
+    @And("^user verifies the presence of \"(.*?)\" header in response body with \"(.*?)\" value$")
+    public void validateHeaderInResponse(String headerName, String headerValue) {
+        verifyPresenceOfResponseHeader(headerName, headerValue);
+    }
+
+    @And("^user verifies the presence of \"(.*?)\" header in response body with \"(.*?)\" value for \"(.*?)\" response$")
+    public void validateHeaderInResponse(String headerName, String headerValue, String responseKey) {
+        verifyPresenceOfResponseHeader(headerName, headerValue, responseKey);
     }
 
     @And("^user sets Content-Type as \"(.*?)\"$")

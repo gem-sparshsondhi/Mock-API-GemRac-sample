@@ -7,6 +7,7 @@ import io.cucumber.datatable.DataTable;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.base64.Base64;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.Header;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -250,7 +251,57 @@ public class GenericFunctions {
         Assert.assertEquals("Status Code mismatch", statusCode, res.getStatusCode());
         logger.logInfo("Status code verified");
     }
+    /**
+     * Verifies if the latest response contains the specified Response Header
+     *
+     * @param headerName Expected Message to be found in Response Body.
+     * @param headerValue Expected Message to be found in Response Body.
+     */
+    public void verifyPresenceOfResponseHeader(String headerName,String headerValue) {
+        Response res = responseMap.get(latestResponseKey);
+        List<Header> responseHeaders = res.getHeaders().asList();
+        for( Header header : responseHeaders){
+            if (header.getName().equals(headerName)){
+                if(header.getValue().equals(headerValue)) {
+                    logger.logInfo("Successfully found " + headerName + " header in Response Headers with "+headerValue+" value", true);
+                    return;
+                }
+                logger.logError("Header "+headerName+" found in Response Headers, but value does not match");
+                Assert.fail("Header "+headerName+" found in Response Headers, but value does not match");
+            }
+        }
+        logger.logError("Header "+headerName+" not found in Response Headers");
+        Assert.fail("Header "+headerName+" not found in Response Headers");
+    }
 
+    /**
+     * Verifies if the specified response contains the specified Response Header
+     *
+     * @param headerName Expected Message to be found in Response Body.
+     * @param headerValue Expected Message to be found in Response Body.
+     * @param responseKey     Key name of the request associated with this response.
+     */
+    public void verifyPresenceOfResponseHeader(String headerName,String headerValue, String responseKey) {
+        if (!responseMap.containsKey(responseKey)) {
+            logger.logError("No such response found. Please recheck the provided Response Key: " + responseKey);
+            Assert.fail("No such response found. Please recheck the provided Response Key: " + responseKey);
+        } else {
+            Response res = responseMap.get(responseKey);
+            List<Header> responseHeaders = res.getHeaders().asList();
+            for( Header header : responseHeaders){
+                if (header.getName().equals(headerName)){
+                    if(header.getValue().equals(headerValue)) {
+                        logger.logInfo("Successfully found " + headerName + " header in Response Headers with "+headerValue+" value", true);
+                        return;
+                    }
+                    logger.logError("Header "+headerName+" found in Response Headers, but value does not match");
+                    Assert.fail("Header "+headerName+" found in Response Headers, but value does not match");
+                }
+            }
+            logger.logError("Header "+headerName+" not found in Response Headers");
+            Assert.fail("Header "+headerName+" not found in Response Headers");
+        }
+    }
     /**
      * Add a single header to the latest request specification
      *
